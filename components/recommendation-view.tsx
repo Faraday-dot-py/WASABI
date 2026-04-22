@@ -173,15 +173,15 @@ export function RecommendationView({
       </section>
 
       {isPrimary && recommendation.cautions.length > 0 && (
-        <section className="flex flex-col gap-2 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4">
-          <div className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.2em] text-amber-400/90">
+        <section className="flex flex-col gap-2 rounded-xl border border-accent/30 bg-accent/5 p-4">
+          <div className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.2em] text-accent/90">
             <AlertTriangle className="h-3 w-3" />
             Watch out for
           </div>
           <ul className="flex flex-col gap-1.5 text-[13px] leading-relaxed text-foreground/90">
             {recommendation.cautions.map((c, i) => (
               <li key={i} className="flex gap-2">
-                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-400/80" />
+                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent/80" />
                 <span>{c}</span>
               </li>
             ))}
@@ -228,7 +228,7 @@ function PathChip({
         "group inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[12px] transition-all duration-300",
         active
           ? primary
-            ? "border-amber-400/60 bg-amber-400/10 text-foreground shadow-[0_0_0_1px_oklch(0.88_0.17_75_/_0.3),_0_0_24px_-6px_oklch(0.88_0.17_75_/_0.5)]"
+            ? "border-accent/60 bg-accent/10 text-foreground shadow-[0_0_0_1px_oklch(0.88_0.14_55_/_0.3),_0_0_24px_-6px_oklch(0.88_0.14_55_/_0.5)]"
             : "border-primary/60 bg-primary/10 text-foreground"
           : "border-border/60 bg-transparent text-muted-foreground hover:border-border hover:text-foreground",
       )}
@@ -238,8 +238,8 @@ function PathChip({
           "h-1.5 w-1.5 rounded-full transition-colors",
           primary
             ? active
-              ? "bg-amber-400"
-              : "bg-amber-400/60"
+              ? "bg-accent"
+              : "bg-accent/60"
             : active
               ? "bg-primary"
               : "bg-primary/60",
@@ -247,7 +247,7 @@ function PathChip({
       />
       <span className="font-medium">{path.name}</span>
       {primary && (
-        <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-amber-400/90">
+        <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-accent/90">
           top match
         </span>
       )}
@@ -292,7 +292,7 @@ function Block({
 }) {
   const toneClasses = {
     positive: "border-primary/25 bg-primary/5 text-primary",
-    warning: "border-amber-500/25 bg-amber-500/5 text-amber-400",
+    warning: "border-accent/25 bg-accent/5 text-accent",
     info: "border-border/60 bg-background/40 text-muted-foreground",
   }[tone]
   return (

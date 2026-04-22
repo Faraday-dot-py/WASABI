@@ -136,22 +136,22 @@ export function NeuralNetwork({
       >
         <defs>
           <radialGradient id="node-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="oklch(0.92 0.18 200)" stopOpacity="0.9" />
-            <stop offset="60%" stopColor="oklch(0.75 0.18 200)" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="oklch(0.75 0.18 200)" stopOpacity="0" />
+            <stop offset="0%" stopColor="oklch(0.92 0.18 135)" stopOpacity="0.9" />
+            <stop offset="60%" stopColor="oklch(0.75 0.18 135)" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="oklch(0.75 0.18 135)" stopOpacity="0" />
           </radialGradient>
           <radialGradient id="node-glow-output" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="oklch(0.92 0.17 75)" stopOpacity="0.95" />
-            <stop offset="60%" stopColor="oklch(0.8 0.17 75)" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="oklch(0.8 0.17 75)" stopOpacity="0" />
+            <stop offset="0%" stopColor="oklch(0.92 0.15 55)" stopOpacity="0.95" />
+            <stop offset="60%" stopColor="oklch(0.82 0.14 55)" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="oklch(0.82 0.14 55)" stopOpacity="0" />
           </radialGradient>
           <linearGradient id="edge-base" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="oklch(0.55 0.1 200)" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="oklch(0.55 0.1 200)" stopOpacity="0.25" />
+            <stop offset="0%" stopColor="oklch(0.55 0.1 140)" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="oklch(0.55 0.1 140)" stopOpacity="0.25" />
           </linearGradient>
           <linearGradient id="edge-active" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="oklch(0.85 0.15 200)" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="oklch(0.88 0.16 75)" stopOpacity="0.9" />
+            <stop offset="0%" stopColor="oklch(0.85 0.17 135)" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="oklch(0.88 0.14 55)" stopOpacity="0.9" />
           </linearGradient>
           <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="3" result="blur" />
@@ -170,7 +170,7 @@ export function NeuralNetwork({
             x2={LAYER_X[k]}
             y1={30}
             y2={VIEW_H - 30}
-            stroke="oklch(0.3 0.02 240)"
+            stroke="oklch(0.3 0.02 150)"
             strokeOpacity="0.15"
             strokeWidth="1"
             strokeDasharray="2 8"
@@ -186,7 +186,7 @@ export function NeuralNetwork({
               y1={e.from.y}
               x2={e.to.x}
               y2={e.to.y}
-              stroke="oklch(0.55 0.08 220)"
+              stroke="oklch(0.55 0.08 140)"
               strokeOpacity={0.06 + e.strength * 0.08}
               strokeWidth={0.6}
             />
@@ -307,10 +307,10 @@ function NetworkNode({
 
   const glow = isOutput ? "url(#node-glow-output)" : "url(#node-glow)"
   const strokeColor = isOutput
-    ? "oklch(0.88 0.17 75)"
+        ? "oklch(0.88 0.15 55)"
     : node.highlighted
-      ? "oklch(0.95 0.05 200)"
-      : "oklch(0.8 0.12 200)"
+        ? "oklch(0.95 0.05 135)"
+        : "oklch(0.8 0.14 135)"
 
   const labelX =
     node.layer === "input"
@@ -344,7 +344,7 @@ function NetworkNode({
           cy={node.y}
           r={r + 10}
           fill="none"
-          stroke="oklch(0.92 0.17 75)"
+          stroke="oklch(0.92 0.15 55)"
           strokeOpacity="0.7"
           strokeWidth={1.2}
         />
@@ -355,7 +355,7 @@ function NetworkNode({
           cy={node.y}
           r={r + 6}
           fill="none"
-          stroke="oklch(0.85 0.1 75)"
+          stroke="oklch(0.85 0.1 55)"
           strokeOpacity="0.35"
           strokeWidth={1}
           strokeDasharray="2 3"
@@ -369,8 +369,8 @@ function NetworkNode({
         r={r}
         fill={
           isOutput
-            ? `oklch(0.82 0.17 75 / ${fillOpacity})`
-            : `oklch(0.78 0.15 200 / ${fillOpacity})`
+        ? `oklch(0.82 0.14 55 / ${fillOpacity})`
+        : `oklch(0.82 0.17 135 / ${fillOpacity})`
         }
         stroke={strokeColor}
         strokeOpacity={0.6 + a * 0.4}
@@ -389,10 +389,10 @@ function NetworkNode({
           textAnchor={anchor}
           fill={
             isPrimary
-              ? "oklch(0.95 0.08 75)"
+              ? "oklch(0.95 0.08 55)"
               : node.highlighted
-                ? "oklch(0.95 0.03 200)"
-                : "oklch(0.72 0.02 220)"
+        ? "oklch(0.95 0.03 135)"
+        : "oklch(0.72 0.02 150)"
           }
           fontSize={node.layer === "input" || node.layer === "output" ? 13 : 11}
           fontWeight={isPrimary || node.highlighted ? 600 : 400}
@@ -428,7 +428,7 @@ function LayerCaption({
         x={x}
         y={18}
         textAnchor="middle"
-        fill="oklch(0.68 0.04 220)"
+        fill="oklch(0.68 0.04 150)"
         fontSize="10"
         letterSpacing="0.22em"
       >
@@ -438,7 +438,7 @@ function LayerCaption({
         x={x}
         y={VIEW_H - 10}
         textAnchor="middle"
-        fill="oklch(0.55 0.02 240)"
+        fill="oklch(0.55 0.02 150)"
         fontSize="10"
         fontStyle="italic"
       >

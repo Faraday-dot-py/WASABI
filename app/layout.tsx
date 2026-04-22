@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Neuralpath — find your AI/ML starting point",
+  title: "WASABI — What AI System Am I Building Into",
   description:
-    "An interactive guide for professors and students. Feed your inputs into a live neural network and discover the right way to begin with AI and ML.",
+    "An interactive guide for professors and students. Answer a short sequence of questions and let a live neural network converge on the AI/ML system you should build into.",
   generator: "v0.app",
   icons: {
     icon: [
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#0a0e14",
+  themeColor: "#0b100c",
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
