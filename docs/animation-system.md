@@ -2,7 +2,7 @@
 
 ## Philosophy
 
-Motion in Neuralpath serves comprehension, not decoration. Three rules:
+Motion in WASABI serves comprehension, not decoration. Three rules:
 
 1. **Every animation must reflect state.** If nothing happened in the
    decision engine, the frame must not change meaningfully.

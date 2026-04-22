@@ -138,7 +138,7 @@ export default function Page() {
         {/* RIGHT: neural network */}
         <section className="relative order-1 flex h-[56vh] w-full flex-1 lg:order-2 lg:h-auto lg:min-h-[calc(100dvh-57px)]">
           <div className="pointer-events-none absolute inset-0 bg-grid opacity-40" />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,oklch(0.14_0.012_245)_85%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,oklch(0.14_0.015_150)_85%)]" />
           <NetworkLegend
             hasSignal={hasSignal}
             primaryName={canShowPrimary ? pathName(recommendation.primary) : undefined}
@@ -176,13 +176,15 @@ function TopBar({
   return (
     <header className="relative z-10 flex items-center justify-between gap-3 border-b border-border/60 bg-background/80 px-5 py-3 backdrop-blur-md md:px-8">
       <div className="flex items-center gap-2.5">
-        <div className="flex h-7 w-7 items-center justify-center rounded-md border border-primary/40 bg-primary/10 shadow-[inset_0_0_12px_oklch(0.78_0.15_205_/_0.3)]">
+        <div className="flex h-7 w-7 items-center justify-center rounded-md border border-primary/40 bg-primary/10 shadow-[inset_0_0_12px_oklch(0.82_0.17_135_/_0.3)]">
           <CircuitBoard className="h-3.5 w-3.5 text-primary" />
         </div>
         <div className="flex flex-col leading-tight">
-          <span className="text-[13px] font-semibold tracking-tight">Neuralpath</span>
-          <span className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-muted-foreground">
-            AI / ML decision compass
+          <span className="text-[13px] font-semibold tracking-[0.08em]">
+            W.A.S.A.B.I.
+          </span>
+          <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-muted-foreground">
+            what AI system am I building into
           </span>
         </div>
       </div>
@@ -229,15 +231,21 @@ function IntroPanel({ onBegin }: { onBegin: () => void }) {
     <div className="flex h-full flex-col justify-center gap-6 animate-in fade-in slide-in-from-bottom-3 duration-700">
       <div className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.24em] text-primary/90">
         <Brain className="h-3 w-3" />
-        an interactive guide
+        w.a.s.a.b.i. — an interactive guide
       </div>
-      <h1 className="text-pretty text-[34px] font-semibold leading-[1.1] tracking-tight text-foreground md:text-[44px]">
-        Find your starting point in AI and machine learning.
+      <h1 className="text-pretty text-[34px] font-semibold leading-[1.05] tracking-tight text-foreground md:text-[44px]">
+        <span className="text-primary">W</span>hat{" "}
+        <span className="text-primary">AI</span>{" "}
+        <span className="text-primary">S</span>ystem{" "}
+        <span className="text-primary">A</span>m I{" "}
+        <span className="text-primary">B</span>uilding{" "}
+        <span className="text-primary">I</span>nto?
       </h1>
       <p className="text-pretty text-[15px] leading-relaxed text-muted-foreground md:text-[16px]">
         Answer a short sequence of questions about your goal, your data, and
         your constraints. The network on the right reacts in real time, shaping
-        itself around your answers and converging on a recommended path.
+        itself around your answers and converging on the AI/ML system you
+        should build into.
       </p>
 
       <div className="flex flex-col gap-2 rounded-xl border border-border/60 bg-card/40 p-4">
@@ -263,7 +271,7 @@ function IntroPanel({ onBegin }: { onBegin: () => void }) {
       <div>
         <button
           onClick={onBegin}
-          className="group inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-[14px] font-semibold text-primary-foreground transition-all hover:brightness-110 shadow-[0_0_0_1px_oklch(0.78_0.15_205_/_0.45),_0_10px_40px_-10px_oklch(0.78_0.15_205_/_0.6)]"
+          className="group inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-[14px] font-semibold text-primary-foreground transition-all hover:brightness-110 shadow-[0_0_0_1px_oklch(0.82_0.17_135_/_0.45),_0_10px_40px_-10px_oklch(0.82_0.17_135_/_0.6)]"
         >
           <Play className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
           Begin the flow
@@ -300,8 +308,8 @@ function NetworkLegend({
         {hasSignal ? "propagating signal" : "awaiting input"}
       </div>
       {primaryName && (
-        <div className="flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-amber-200/90 backdrop-blur-md">
-          <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+        <div className="flex items-center gap-2 rounded-full border border-accent/30 bg-accent/5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-accent/90 backdrop-blur-md">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
           converging: {primaryName}
         </div>
       )}

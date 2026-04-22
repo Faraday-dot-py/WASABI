@@ -1,72 +1,106 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Palette: 5 colors total
- *   - background   (near-black navy)
- *   - foreground   (near-white)
- *   - muted        (dark gray)
- *   - primary      (electric cyan — "signals")
- *   - accent amber (handled via literal oklch for output glow)
+ * W.A.S.A.B.I. — "Atlas of Inference" design system.
+ *
+ * Palette is strictly 5 colours (all expressed in OKLCH):
+ *   moss       — deep green-tinted ground, the map surface
+ *   vellum     — warm off-white, the foreground ink
+ *   lichen     — muted grey-green for secondary text and thin strokes
+ *   living     — saturated biophilic green, the primary signal
+ *   terracotta — warm sunset accent, reserved for the converging path
+ *
+ * Any other colour in the product is a transparency of one of these.
  */
 
 :root {
-  --background: oklch(0.14 0.012 245);
-  --foreground: oklch(0.96 0.005 240);
-  --card: oklch(0.17 0.012 245);
-  --card-foreground: oklch(0.96 0.005 240);
-  --popover: oklch(0.17 0.012 245);
-  --popover-foreground: oklch(0.96 0.005 240);
-  --primary: oklch(0.78 0.15 205);
-  --primary-foreground: oklch(0.12 0.02 240);
-  --secondary: oklch(0.22 0.01 245);
-  --secondary-foreground: oklch(0.96 0.005 240);
-  --muted: oklch(0.2 0.01 245);
-  --muted-foreground: oklch(0.64 0.015 240);
-  --accent: oklch(0.82 0.15 75);
-  --accent-foreground: oklch(0.14 0.012 245);
-  --destructive: oklch(0.65 0.22 22);
-  --destructive-foreground: oklch(0.98 0.005 240);
-  --border: oklch(0.26 0.012 245);
-  --input: oklch(0.22 0.012 245);
-  --ring: oklch(0.78 0.15 205);
-  --chart-1: oklch(0.78 0.15 205);
-  --chart-2: oklch(0.82 0.15 75);
-  --chart-3: oklch(0.62 0.1 220);
-  --chart-4: oklch(0.72 0.12 90);
-  --chart-5: oklch(0.55 0.08 245);
+  --background: oklch(0.14 0.018 155);
+  --foreground: oklch(0.96 0.02 88);
+
+  --surface: oklch(0.19 0.02 150 / 0.62);
+  --surface-strong: oklch(0.23 0.025 150 / 0.82);
+
+  --border: oklch(0.4 0.03 148 / 0.35);
+  --border-strong: oklch(0.58 0.05 145 / 0.55);
+
+  --muted: oklch(0.22 0.02 150);
+  --muted-foreground: oklch(0.7 0.025 145);
+
+  --primary: oklch(0.82 0.15 145);
+  --primary-foreground: oklch(0.14 0.02 150);
+
+  --accent: oklch(0.82 0.14 55);
+  --accent-foreground: oklch(0.16 0.04 50);
+
+  --destructive: oklch(0.7 0.17 28);
+  --destructive-foreground: oklch(0.98 0.005 150);
+
+  --ring: oklch(0.82 0.15 145 / 0.45);
+
   --radius: 0.625rem;
+
+  /* Atlas-specific visual tokens read by the canvas renderer. */
+  --atlas-ground: oklch(0.13 0.018 155);
+  --atlas-ground-hi: oklch(0.2 0.025 150);
+  --atlas-contour: 0.82 0.12 145;
+  --atlas-contour-weak: 0.5 0.05 148;
+  --atlas-flow: 0.92 0.1 145;
+  --atlas-territory: 0.85 0.15 145;
+  --atlas-territory-top: 0.86 0.14 55;
+  --atlas-ink: 0.96 0.02 88;
+}
+
+.dark {
+  --background: oklch(0.14 0.018 155);
+  --foreground: oklch(0.96 0.02 88);
+  --surface: oklch(0.19 0.02 150 / 0.62);
+  --surface-strong: oklch(0.23 0.025 150 / 0.82);
+  --border: oklch(0.4 0.03 148 / 0.35);
+  --border-strong: oklch(0.58 0.05 145 / 0.55);
+  --muted: oklch(0.22 0.02 150);
+  --muted-foreground: oklch(0.7 0.025 145);
+  --primary: oklch(0.82 0.15 145);
+  --primary-foreground: oklch(0.14 0.02 150);
+  --accent: oklch(0.82 0.14 55);
+  --accent-foreground: oklch(0.16 0.04 50);
+  --ring: oklch(0.82 0.15 145 / 0.45);
 }
 
 @theme inline {
-  --font-sans: var(--font-sans, 'Geist', ui-sans-serif, system-ui, sans-serif);
-  --font-mono: var(--font-mono, 'Geist Mono', ui-monospace, monospace);
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
+
+  --color-card: var(--surface);
+  --color-card-foreground: var(--foreground);
+  --color-popover: var(--surface-strong);
+  --color-popover-foreground: var(--foreground);
+
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-secondary: var(--surface);
+  --color-secondary-foreground: var(--foreground);
+
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+
   --color-border: var(--border);
-  --color-input: var(--input);
+  --color-input: var(--border);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -75,32 +109,148 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/40;
   }
+
   html,
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
   }
+
   body {
+    font-feature-settings:
+      "ss01" on,
+      "cv11" on;
+    font-variant-numeric: tabular-nums;
+    /* Warm, living ambient glows behind the atlas. Two opposite-corner
+       pools (green and terracotta) so the composition has light-direction. */
     background-image:
       radial-gradient(
-        ellipse 80% 60% at 50% -10%,
-        oklch(0.78 0.15 205 / 0.08),
+        1100px 700px at 78% -8%,
+        oklch(0.3 0.06 145 / 0.38) 0%,
         transparent 60%
       ),
       radial-gradient(
-        ellipse 60% 50% at 100% 100%,
-        oklch(0.82 0.15 75 / 0.05),
+        900px 600px at -4% 108%,
+        oklch(0.3 0.06 50 / 0.22) 0%,
         transparent 60%
       );
     background-attachment: fixed;
   }
+
+  :focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--background),
+      0 0 0 4px var(--ring);
+    border-radius: 6px;
+  }
+
+  ::selection {
+    background: oklch(0.82 0.15 145 / 0.3);
+    color: var(--foreground);
+  }
 }
 
-/* Ambient starfield-like dots for the network backdrop */
-.bg-grid {
-  background-image:
-    radial-gradient(oklch(0.35 0.02 245 / 0.35) 1px, transparent 1px);
-  background-size: 22px 22px;
-  background-position: 0 0;
+/*
+ * Utilities specific to the atlas experience.
+ */
+
+.atlas-vignette {
+  mask-image: radial-gradient(ellipse at 50% 45%, #000 58%, transparent 96%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 45%, #000 58%, transparent 96%);
+}
+
+.atlas-grain {
+  background-image: radial-gradient(
+    oklch(0.5 0.04 148 / 0.18) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
+}
+
+@keyframes atlas-rise {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes atlas-settle {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes atlas-breathe {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes atlas-shimmer {
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.atlas-rise {
+  animation: atlas-rise 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.atlas-settle {
+  animation: atlas-settle 480ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.atlas-breathe {
+  animation: atlas-breathe 6s ease-in-out infinite;
+}
+
+.atlas-rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    oklch(0.58 0.05 145 / 0.4) 20%,
+    oklch(0.58 0.05 145 / 0.4) 80%,
+    transparent
+  );
+}
+
+.atlas-rule-v {
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    oklch(0.58 0.05 145 / 0.4) 20%,
+    oklch(0.58 0.05 145 / 0.4) 80%,
+    transparent
+  );
+}
+
+/* Editorial serif display treatment — used on the question and the
+   ridge name in the reveal. */
+.display-serif {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-variation-settings: "opsz" 120, "SOFT" 50;
+  letter-spacing: -0.015em;
 }

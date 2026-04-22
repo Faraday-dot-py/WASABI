@@ -1,8 +1,9 @@
-# Neuralpath
+# W.A.S.A.B.I.
 
-An interactive guide that helps professors and students figure out how to begin
-with AI and machine learning. The user feeds answers into the first layer of a
-live neural network and watches the network converge on a recommended path.
+**What AI System Am I Building Into** — an interactive guide that helps
+professors and students figure out which AI/ML system they should actually
+build into. The user feeds answers into the first layer of a live neural
+network and watches the network converge on a recommended path.
 
 This repository contains **V1** of the product: the guided, deterministic,
 non-LLM core experience. V2 (LLM-assisted interpretation) and V3 (interactive
