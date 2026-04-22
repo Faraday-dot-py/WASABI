@@ -1,0 +1,137 @@
+import type { Question } from "./types"
+
+// Question order = input layer order (top to bottom in the visualization).
+// Each question corresponds to exactly one input node, which keeps the
+// metaphor "you are shaping the first layer" intuitive.
+export const QUESTIONS: Question[] = [
+  {
+    id: "goal",
+    nodeLabel: "Goal",
+    title: "What are you trying to do?",
+    subtitle: "Pick the closest match. You can refine later.",
+    kind: "single",
+    why: "The shape of your goal is the single strongest signal for which family of methods fits.",
+    options: [
+      { value: "predict", label: "Predict a number or outcome", hint: "Forecasting, regression, risk scoring" },
+      { value: "classify", label: "Classify or categorize things", hint: "Spam / not spam, topic tagging, triage" },
+      { value: "cluster", label: "Find groups or structure", hint: "Segmentation, pattern discovery" },
+      { value: "retrieve", label: "Find or rank relevant items", hint: "Search, recommendation, ranking" },
+      { value: "generate", label: "Generate text, images, or media", hint: "Drafting, summarization, creative output" },
+      { value: "extract", label: "Extract structure from messy input", hint: "Parse documents, pull fields, normalize" },
+      { value: "automate", label: "Automate a multi-step task", hint: "Workflows, routing, tool use" },
+      { value: "explore", label: "Explore data for insight", hint: "Analytics, EDA, hypothesis generation" },
+    ],
+  },
+  {
+    id: "necessity",
+    nodeLabel: "Need AI?",
+    title: "Could a simpler approach work?",
+    subtitle: "Be honest. Simpler systems are cheaper, faster, and more predictable.",
+    kind: "single",
+    why: "Many successful projects replace a planned ML system with rules, SQL, or a lookup table.",
+    options: [
+      { value: "rules-fine", label: "Rules or analytics probably work" },
+      { value: "rules-maybe", label: "Rules might work but feel fragile" },
+      { value: "unsure", label: "Not sure, that's why I'm here" },
+      { value: "needs-learning", label: "The pattern is too complex for rules" },
+      { value: "needs-reasoning", label: "It requires language or reasoning" },
+    ],
+  },
+  {
+    id: "modality",
+    nodeLabel: "Input",
+    title: "What does your input look like?",
+    subtitle: "The modality drives what models and tooling are viable.",
+    kind: "single",
+    why: "Modality determines which pretrained models you can stand on and how much you'll build yourself.",
+    options: [
+      { value: "tabular", label: "Tabular / structured data" },
+      { value: "text", label: "Text or documents" },
+      { value: "image", label: "Images" },
+      { value: "audio", label: "Audio or speech" },
+      { value: "video", label: "Video" },
+      { value: "code", label: "Source code" },
+      { value: "multimodal", label: "A mix of the above" },
+    ],
+  },
+  {
+    id: "data",
+    nodeLabel: "Data",
+    title: "How ready is your data?",
+    subtitle: "This is usually the real bottleneck.",
+    kind: "single",
+    why: "Readiness decides whether you train, fine-tune, prompt, or start by fixing your pipeline.",
+    options: [
+      { value: "clean-labeled", label: "Clean and well labeled" },
+      { value: "clean-unlabeled", label: "Clean but unlabeled" },
+      { value: "messy", label: "Messy or fragmented" },
+      { value: "sparse", label: "Not much data yet" },
+      { value: "sensitive", label: "Sensitive or regulated" },
+      { value: "live", label: "Streaming or live" },
+    ],
+  },
+  {
+    id: "labels",
+    nodeLabel: "Labels",
+    title: "What's the label situation?",
+    subtitle: "Supervision shapes which learning strategies are even available.",
+    kind: "single",
+    why: "No labels and no plan to get them is the #1 reason classical supervised ML quietly fails.",
+    options: [
+      { value: "have", label: "I have reliable labels" },
+      { value: "noisy", label: "Labels exist but are noisy" },
+      { value: "can-label", label: "I can create labels with effort" },
+      { value: "weak", label: "Only weak or indirect signals" },
+      { value: "none", label: "No labels and no clear path to them" },
+    ],
+  },
+  {
+    id: "constraints",
+    nodeLabel: "Limits",
+    title: "What constraints matter most?",
+    subtitle: "Select everything that applies.",
+    kind: "multi",
+    why: "Constraints often rule out the obvious-looking answer before you start.",
+    options: [
+      { value: "privacy", label: "Privacy / on-prem / no third-party models" },
+      { value: "interpretability", label: "Must be explainable" },
+      { value: "low-latency", label: "Needs to be fast at inference" },
+      { value: "low-compute", label: "Limited compute or budget" },
+      { value: "high-stakes", label: "High cost if wrong" },
+      { value: "none", label: "No hard constraints yet" },
+    ],
+  },
+  {
+    id: "system",
+    nodeLabel: "System",
+    title: "What does the surrounding system need?",
+    subtitle: "Select everything that applies.",
+    kind: "multi",
+    why: "Whether you need retrieval, tools, or live data determines if a single model is enough.",
+    options: [
+      { value: "knowledge", label: "Grounded in a specific knowledge base" },
+      { value: "fresh", label: "Uses live or frequently updated data" },
+      { value: "tools", label: "Needs to call tools or APIs" },
+      { value: "human-loop", label: "Humans review or correct outputs" },
+      { value: "model-only", label: "A single model output is enough" },
+    ],
+  },
+  {
+    id: "stage",
+    nodeLabel: "Stage",
+    title: "Where are you in the journey?",
+    subtitle: "This calibrates effort and risk tolerance.",
+    kind: "single",
+    why: "A class project and a production system should not start the same way.",
+    options: [
+      { value: "learning", label: "Learning / exploring" },
+      { value: "prototype", label: "Prototype or demo" },
+      { value: "research", label: "Research or publication" },
+      { value: "production", label: "Heading to production" },
+    ],
+  },
+]
+
+export const QUESTION_BY_ID: Record<string, Question> = Object.fromEntries(
+  QUESTIONS.map((q) => [q.id, q]),
+)
