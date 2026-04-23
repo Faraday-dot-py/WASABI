@@ -70,11 +70,6 @@
 }
 
 @layer base {
-  /* Strip all border-radius globally */
-  *, *::before, *::after {
-    border-radius: 0 !important;
-  }
-
   * {
     @apply border-border outline-ring/50;
   }
@@ -676,4 +671,9 @@
   .answer-pill strong {
     overflow-wrap: anywhere;
   }
+}
+
+/* Outside all layers — wins over Tailwind utilities */
+*, *::before, *::after {
+  border-radius: 0 !important;
 }

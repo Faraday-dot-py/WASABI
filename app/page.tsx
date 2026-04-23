@@ -121,9 +121,14 @@ export default function Page() {
           <div className="wasabi-brand-mark">
             <Brain className="h-5 w-5" />
           </div>
-          <span className="text-[22px] font-bold tracking-[-0.05em] text-foreground">
-            WASABI
-          </span>
+          <div className="flex flex-col">
+            <span className="text-[22px] font-bold leading-none tracking-[-0.05em] text-foreground">
+              WASABI
+            </span>
+            <span className="text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
+              what ai system am i building into
+            </span>
+          </div>
         </div>
 
         <div className="hidden items-center justify-center md:flex">
@@ -138,15 +143,10 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <span className="hidden text-[10px] uppercase tracking-[0.22em] text-muted-foreground lg:block">
-            what ai system am i building into
-          </span>
-          <button onClick={restart} className="status-reset">
-            <RotateCcw className="h-3.5 w-3.5" />
-            Reset
-          </button>
-        </div>
+        <button onClick={restart} className="status-reset">
+          <RotateCcw className="h-3.5 w-3.5" />
+          Reset
+        </button>
       </header>
 
       <div className="wasabi-layout">
