@@ -21,6 +21,11 @@ const LAYER_X = {
   output: 1040,
 }
 
+function edgePath(from: Node, to: Node) {
+  const bend = (to.x - from.x) * 0.42
+  return `M ${from.x} ${from.y} C ${from.x + bend} ${from.y}, ${to.x - bend} ${to.y}, ${to.x} ${to.y}`
+}
+
 function layerY(i: number, count: number, top: number, bottom: number) {
   if (count === 1) return (top + bottom) / 2
   const step = (bottom - top) / (count - 1)
@@ -136,22 +141,22 @@ export function NeuralNetwork({
       >
         <defs>
           <radialGradient id="node-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="oklch(0.92 0.18 200)" stopOpacity="0.9" />
-            <stop offset="60%" stopColor="oklch(0.75 0.18 200)" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="oklch(0.75 0.18 200)" stopOpacity="0" />
+            <stop offset="0%" stopColor="oklch(0.8 0.09 164)" stopOpacity="0.75" />
+            <stop offset="60%" stopColor="oklch(0.72 0.08 164)" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="oklch(0.72 0.08 164)" stopOpacity="0" />
           </radialGradient>
           <radialGradient id="node-glow-output" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="oklch(0.92 0.17 75)" stopOpacity="0.95" />
-            <stop offset="60%" stopColor="oklch(0.8 0.17 75)" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="oklch(0.8 0.17 75)" stopOpacity="0" />
+            <stop offset="0%" stopColor="oklch(0.88 0.1 82)" stopOpacity="0.9" />
+            <stop offset="60%" stopColor="oklch(0.79 0.09 82)" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="oklch(0.79 0.09 82)" stopOpacity="0" />
           </radialGradient>
-          <linearGradient id="edge-base" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="oklch(0.55 0.1 200)" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="oklch(0.55 0.1 200)" stopOpacity="0.25" />
+          <linearGradient id="edge-base" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="oklch(0.63 0.06 165)" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="oklch(0.75 0.06 84)" stopOpacity="0.16" />
           </linearGradient>
-          <linearGradient id="edge-active" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="oklch(0.85 0.15 200)" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="oklch(0.88 0.16 75)" stopOpacity="0.9" />
+          <linearGradient id="edge-active" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="oklch(0.73 0.1 164)" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="oklch(0.82 0.1 82)" stopOpacity="0.9" />
           </linearGradient>
           <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="3" result="blur" />
@@ -162,6 +167,31 @@ export function NeuralNetwork({
           </filter>
         </defs>
 
+        <rect
+          x={32}
+          y={34}
+          width={VIEW_W - 64}
+          height={VIEW_H - 68}
+          rx={0}
+          fill="rgba(255,255,255,0.14)"
+          stroke="rgba(96, 128, 101, 0.16)"
+          strokeWidth="1"
+        />
+
+        {(!compact ? [0, 1, 2] : [0]).map((ring) => (
+          <ellipse
+            key={ring}
+            cx={VIEW_W / 2}
+            cy={VIEW_H / 2}
+            rx={430 + ring * 120}
+            ry={210 + ring * 70}
+            fill="none"
+            stroke="rgba(98, 129, 100, 0.08)"
+            strokeWidth="1"
+            strokeDasharray="2 9"
+          />
+        ))}
+
         {/* Layer columns as subtle vertical rails */}
         {(["input", "h1", "h2", "output"] as const).map((k) => (
           <line
@@ -170,8 +200,7 @@ export function NeuralNetwork({
             x2={LAYER_X[k]}
             y1={30}
             y2={VIEW_H - 30}
-            stroke="oklch(0.3 0.02 240)"
-            strokeOpacity="0.15"
+            stroke="rgba(83, 108, 84, 0.18)"
             strokeWidth="1"
             strokeDasharray="2 8"
           />
@@ -179,34 +208,31 @@ export function NeuralNetwork({
 
         {/* Edges - base (always visible faintly) */}
         <g aria-hidden="true">
-          {edges.map((e, i) => (
-            <line
+          {!compact &&
+            edges.map((e, i) => (
+            <path
               key={`base-${i}`}
-              x1={e.from.x}
-              y1={e.from.y}
-              x2={e.to.x}
-              y2={e.to.y}
-              stroke="oklch(0.55 0.08 220)"
+              d={edgePath(e.from, e.to)}
+              fill="none"
+              stroke="url(#edge-base)"
               strokeOpacity={0.06 + e.strength * 0.08}
               strokeWidth={0.6}
             />
-          ))}
+            ))}
         </g>
 
         {/* Edges - active signal flow */}
         <g aria-hidden="true">
           {edges
-            .filter((e) => e.strength > 0.12)
+            .filter((e) => e.strength > (compact ? 0.22 : 0.12))
             .map((e, i) => {
               const opacity = Math.min(0.85, 0.2 + e.strength * 0.9)
               const width = 0.6 + e.strength * 1.8
               return (
-                <line
+                <path
                   key={`flow-${i}`}
-                  x1={e.from.x}
-                  y1={e.from.y}
-                  x2={e.to.x}
-                  y2={e.to.y}
+                  d={edgePath(e.from, e.to)}
+                  fill="none"
                   stroke="url(#edge-active)"
                   strokeOpacity={opacity}
                   strokeWidth={width}
@@ -232,15 +258,17 @@ export function NeuralNetwork({
         </g>
 
         {/* Layer captions */}
-        <g
-          className="select-none"
-          style={{ fontFamily: "var(--font-mono, ui-monospace, monospace)" }}
-        >
-          <LayerCaption x={LAYER_X.input} label="INPUTS" subtitle="your answers" />
-          <LayerCaption x={LAYER_X.h1} label="SIGNALS" subtitle="what we detect" />
-          <LayerCaption x={LAYER_X.h2} label="APPROACH" subtitle="model families" />
-          <LayerCaption x={LAYER_X.output} label="PATHS" subtitle="recommended build" />
-        </g>
+        {!compact && (
+          <g
+            className="select-none"
+            style={{ fontFamily: "var(--font-mono, ui-monospace, monospace)" }}
+          >
+            <LayerCaption x={LAYER_X.input} label="SEEDS" subtitle="your inputs" />
+            <LayerCaption x={LAYER_X.h1} label="SENSES" subtitle="what awakens" />
+            <LayerCaption x={LAYER_X.h2} label="ROUTES" subtitle="families" />
+            <LayerCaption x={LAYER_X.output} label="HABITATS" subtitle="best fit" />
+          </g>
+        )}
       </svg>
 
       <style jsx>{`
@@ -307,21 +335,15 @@ function NetworkNode({
 
   const glow = isOutput ? "url(#node-glow-output)" : "url(#node-glow)"
   const strokeColor = isOutput
-    ? "oklch(0.88 0.17 75)"
+    ? "oklch(0.75 0.08 82)"
     : node.highlighted
-      ? "oklch(0.95 0.05 200)"
-      : "oklch(0.8 0.12 200)"
+      ? "oklch(0.54 0.07 163)"
+      : "oklch(0.65 0.06 162)"
 
-  const labelX =
-    node.layer === "input"
-      ? node.x - 18
-      : node.layer === "output"
-        ? node.x + 18
-        : node.x
+  const labelX = node.layer === "input" ? node.x - 18 : node.x
   const labelY =
-    node.layer === "h1" || node.layer === "h2" ? node.y - r - 10 : node.y + 4
-  const anchor =
-    node.layer === "input" ? "end" : node.layer === "output" ? "start" : "middle"
+    node.layer === "input" ? node.y + 4 : node.y - r - 8
+  const anchor = node.layer === "input" ? "end" : "middle"
 
   return (
     <g>
@@ -344,7 +366,7 @@ function NetworkNode({
           cy={node.y}
           r={r + 10}
           fill="none"
-          stroke="oklch(0.92 0.17 75)"
+          stroke="oklch(0.82 0.1 82)"
           strokeOpacity="0.7"
           strokeWidth={1.2}
         />
@@ -369,8 +391,8 @@ function NetworkNode({
         r={r}
         fill={
           isOutput
-            ? `oklch(0.82 0.17 75 / ${fillOpacity})`
-            : `oklch(0.78 0.15 200 / ${fillOpacity})`
+            ? `oklch(0.82 0.1 82 / ${fillOpacity})`
+            : `oklch(0.72 0.09 165 / ${fillOpacity})`
         }
         stroke={strokeColor}
         strokeOpacity={0.6 + a * 0.4}
@@ -389,12 +411,12 @@ function NetworkNode({
           textAnchor={anchor}
           fill={
             isPrimary
-              ? "oklch(0.95 0.08 75)"
+              ? "oklch(0.43 0.04 82)"
               : node.highlighted
-                ? "oklch(0.95 0.03 200)"
-                : "oklch(0.72 0.02 220)"
+                ? "oklch(0.36 0.05 155)"
+                : "oklch(0.47 0.03 145)"
           }
-          fontSize={node.layer === "input" || node.layer === "output" ? 13 : 11}
+          fontSize={node.layer === "input" ? 13 : 12}
           fontWeight={isPrimary || node.highlighted ? 600 : 400}
           style={{
             fontFamily:
@@ -428,7 +450,7 @@ function LayerCaption({
         x={x}
         y={18}
         textAnchor="middle"
-        fill="oklch(0.68 0.04 220)"
+        fill="rgba(61, 93, 68, 0.62)"
         fontSize="10"
         letterSpacing="0.22em"
       >
@@ -438,7 +460,7 @@ function LayerCaption({
         x={x}
         y={VIEW_H - 10}
         textAnchor="middle"
-        fill="oklch(0.55 0.02 240)"
+        fill="rgba(85, 110, 84, 0.56)"
         fontSize="10"
         fontStyle="italic"
       >

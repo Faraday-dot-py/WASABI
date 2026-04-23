@@ -35,6 +35,7 @@ export type Hidden2Id = (typeof HIDDEN_2)[number]["id"]
 // ---------------------------------------------------------------------------
 
 const clamp01 = (n: number): Activation => Math.max(0, Math.min(1, n))
+// Soft-saturating normalizer: negative→0, boosts low signals, clamps ≥1→1.
 const softnorm = (n: number): Activation => clamp01(n / (1 + Math.abs(n)) + 0.5 * Math.sign(n))
 
 function has(answers: Answers, id: string, value: string): boolean {

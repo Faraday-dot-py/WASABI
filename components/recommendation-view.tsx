@@ -4,10 +4,8 @@ import { useState } from "react"
 import {
   AlertTriangle,
   ArrowLeft,
-  CheckCircle2,
   Compass,
   FlaskConical,
-  Gauge,
   Layers,
   Lightbulb,
   RefreshCw,
@@ -15,6 +13,7 @@ import {
   Sparkles,
   Target,
 } from "lucide-react"
+import { annotate } from "@/lib/annotate"
 import { PATH_BY_ID } from "@/lib/decision-engine/paths"
 import type { PathId, Recommendation } from "@/lib/decision-engine/types"
 import { cn } from "@/lib/utils"
@@ -35,175 +34,184 @@ export function RecommendationView({
   const isPrimary = focusedPath === recommendation.primary
 
   return (
-    <div className="flex h-full flex-col gap-5 animate-in fade-in slide-in-from-bottom-3 duration-700">
-      <header className="flex flex-col gap-2">
-        <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-          <Sparkles className="h-3 w-3 text-primary" />
-          <span className="text-primary">Output resolved</span>
-          <span className="h-px flex-1 bg-border/60" />
-          <button
-            onClick={onEditAnswers}
-            className="inline-flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ArrowLeft className="h-3 w-3" />
-            edit answers
-          </button>
+    <div className="flex h-full flex-col gap-4">
+      <header className="flex flex-col gap-3">
+        <div className="flex items-center gap-3">
+          <span className="section-kicker">Full recommendation</span>
+          <div className="h-px flex-1 bg-[linear-gradient(90deg,var(--line-strong),transparent)]" />
         </div>
-        <h2 className="text-pretty text-[28px] font-semibold leading-tight text-foreground md:text-[32px]">
-          Your recommended path
-        </h2>
-      </header>
-
-      {/* Path switcher */}
-      <div className="flex flex-wrap gap-2">
-        <PathChip
-          id={recommendation.primary}
-          active={focusedPath === recommendation.primary}
-          primary
-          onClick={() => setFocusedPath(recommendation.primary)}
-        />
-        {recommendation.alternatives.map((id) => (
-          <PathChip
-            key={id}
-            id={id}
-            active={focusedPath === id}
-            onClick={() => setFocusedPath(id)}
-          />
-        ))}
-      </div>
-
-      {/* Focused path detail */}
-      <section
-        key={focusedPath}
-        className="flex flex-col gap-5 rounded-xl border border-border/70 bg-card/50 p-5 backdrop-blur-sm animate-in fade-in duration-500"
-      >
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.2em] text-primary/90">
-            {isPrimary ? "primary recommendation" : "alternative path"}
-          </div>
-          <h3 className="text-[22px] font-semibold leading-tight text-foreground">
-            {path.name}
-          </h3>
-          <p className="text-[13px] text-muted-foreground">{path.tagline}</p>
-        </div>
-
-        <p className="text-pretty text-[14px] leading-relaxed text-foreground/90">
-          {path.summary}
-        </p>
-
-        {isPrimary && recommendation.rationale.length > 0 && (
-          <div className="flex flex-col gap-2 rounded-lg border border-primary/25 bg-primary/5 p-4">
-            <div className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.2em] text-primary">
-              <Lightbulb className="h-3 w-3" />
-              Why this fits
-            </div>
-            <ul className="flex flex-col gap-1.5 text-[13px] leading-relaxed text-foreground/90">
-              {recommendation.rationale.map((r, i) => (
-                <li key={i} className="flex gap-2">
-                  <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-                  <span>{r}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          <Stat icon={Gauge} label="Effort" value={path.effort} />
-          <Stat icon={ShieldAlert} label="Risk" value={path.risk} />
-          <Stat icon={Layers} label="Data" value={dataSignal(path.dataImplications)} />
-        </div>
-
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <Block
-            icon={Target}
-            title="When it fits"
-            items={path.whenItFits}
-            tone="positive"
-          />
-          <Block
-            icon={AlertTriangle}
-            title="Avoid when"
-            items={path.avoidWhen}
-            tone="warning"
-          />
-        </div>
-
-        <Block
-          icon={FlaskConical}
-          title="First prototype"
-          items={[path.firstPrototype]}
-          tone="info"
-        />
-
-        <Block
-          icon={Compass}
-          title="Evaluation approach"
-          items={[path.evaluation]}
-          tone="info"
-        />
 
         <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.2em] text-muted-foreground">
-            Immediate next steps
+          <div className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--sprout-soft)] px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-[var(--sprout-deep)]">
+            <Sparkles className="h-3.5 w-3.5" />
+            Recommendation ready
           </div>
-          <ol className="flex flex-col gap-2">
-            {path.nextSteps.map((step, i) => (
-              <li
-                key={i}
-                className="flex items-start gap-3 rounded-lg border border-border/60 bg-background/40 px-3 py-2.5 text-[13px] leading-relaxed text-foreground/90"
-              >
-                <span className="font-mono text-[11px] font-medium text-primary">
-                  0{i + 1}
-                </span>
-                <span>{step}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-
-        <div className="flex flex-col gap-1 rounded-lg border border-border/60 bg-background/30 p-3">
-          <div className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-muted-foreground">
-            Data implications
-          </div>
-          <p className="text-[13px] leading-relaxed text-foreground/85">
-            {path.dataImplications}
+          <h2 className="text-balance text-[30px] font-semibold leading-[1.02] tracking-[-0.045em] text-foreground">
+            Here's what WASABI recommends.
+          </h2>
+          <p className="max-w-xl text-pretty text-[14.5px] leading-relaxed text-muted-foreground">
+            Based on your answers. The alternatives below are real options —
+            check the tradeoffs to see why they ranked lower.
           </p>
         </div>
-      </section>
+      </header>
 
-      {isPrimary && recommendation.cautions.length > 0 && (
-        <section className="flex flex-col gap-2 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4">
-          <div className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.2em] text-amber-400/90">
-            <AlertTriangle className="h-3 w-3" />
-            Watch out for
-          </div>
-          <ul className="flex flex-col gap-1.5 text-[13px] leading-relaxed text-foreground/90">
-            {recommendation.cautions.map((c, i) => (
-              <li key={i} className="flex gap-2">
-                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-400/80" />
-                <span>{c}</span>
-              </li>
+      <div className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+        <section className="wasabi-panel wasabi-panel-strong flex flex-col gap-5 px-5 py-5">
+          <div className="flex flex-wrap gap-2">
+            <PathChip
+              id={recommendation.primary}
+              active={focusedPath === recommendation.primary}
+              primary
+              onClick={() => setFocusedPath(recommendation.primary)}
+            />
+            {recommendation.alternatives.map((id) => (
+              <PathChip
+                key={id}
+                id={id}
+                active={focusedPath === id}
+                onClick={() => setFocusedPath(id)}
+              />
             ))}
-          </ul>
-        </section>
-      )}
+          </div>
 
-      <div className="mt-auto flex items-center justify-between gap-2 pt-2">
-        <button
-          onClick={onEditAnswers}
-          className="inline-flex items-center gap-1.5 rounded-md border border-border/70 bg-transparent px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          Revise answers
-        </button>
-        <button
-          onClick={onRestart}
-          className="inline-flex items-center gap-1.5 rounded-md border border-border/70 bg-transparent px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground"
-        >
-          <RefreshCw className="h-3.5 w-3.5" />
-          Start over
-        </button>
+          <div className="rounded-[1.5rem] border border-[var(--line-soft)] bg-white/55 px-5 py-5">
+            <div className="mb-4 flex items-start justify-between gap-3">
+              <div className="space-y-2">
+                <div className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--paper)] px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                  {isPrimary ? "Best fit" : "Alternative"}
+                </div>
+                <h3 className="text-[26px] font-semibold tracking-[-0.04em] text-foreground">
+                  {path.name}
+                </h3>
+                <p className="max-w-xl text-[13.5px] leading-relaxed text-muted-foreground">
+                  {annotate(path.tagline)}
+                </p>
+              </div>
+
+              <div className="grid min-w-[180px] gap-2">
+                <Stat icon={Target} label="Effort" value={path.effort} />
+                <Stat icon={ShieldAlert} label="Risk" value={path.risk} />
+                <Stat icon={Layers} label="Data" value={dataSignal(path.dataImplications)} />
+              </div>
+            </div>
+
+            <p className="text-pretty text-[15px] leading-relaxed text-foreground/85">
+              {annotate(path.summary)}
+            </p>
+          </div>
+
+          {isPrimary && recommendation.rationale.length > 0 && (
+            <Block
+              icon={Lightbulb}
+              title="Why this came out on top"
+              items={recommendation.rationale}
+              tone="positive"
+            />
+          )}
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <Block
+              icon={Target}
+              title="Best when"
+              items={path.whenItFits}
+              tone="neutral"
+            />
+            <Block
+              icon={AlertTriangle}
+              title="When to avoid this"
+              items={path.avoidWhen}
+              tone="warning"
+            />
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <Block
+              icon={FlaskConical}
+              title="First prototype"
+              items={[path.firstPrototype]}
+              tone="neutral"
+            />
+            <Block
+              icon={Compass}
+              title="How to evaluate"
+              items={[path.evaluation]}
+              tone="neutral"
+            />
+          </div>
+        </section>
+
+        <aside className="flex flex-col gap-4">
+          <section className="wasabi-panel flex flex-col gap-3 px-4 py-4">
+            <div className="wasabi-note-header">
+              <Layers className="h-3.5 w-3.5" />
+              <span>Next steps</span>
+            </div>
+            {path.nextSteps.length > 0 && (
+              <ol className="flex flex-col gap-2">
+                {path.nextSteps.map((step, index) => (
+                  <li
+                    key={step}
+                    className="rounded-[1.1rem] border border-[var(--line-soft)] bg-white/55 px-3 py-3"
+                  >
+                    <div className="mb-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                      Step {String(index + 1).padStart(2, "0")}
+                    </div>
+                    <div className="text-[13.5px] leading-relaxed text-foreground/85">
+                      {annotate(step)}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </section>
+
+          <section className="wasabi-panel flex flex-col gap-3 px-4 py-4">
+            <div className="wasabi-note-header">
+              <Layers className="h-3.5 w-3.5" />
+              <span>What this means for your data</span>
+            </div>
+            <p className="text-[13.5px] leading-relaxed text-foreground/82">
+              {annotate(path.dataImplications)}
+            </p>
+          </section>
+
+          {isPrimary && recommendation.cautions.length > 0 && (
+            <section className="wasabi-panel border-[var(--amber-line)] bg-[var(--amber-soft)] px-4 py-4">
+              <div className="mb-3 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-[var(--amber-ink)]">
+                <AlertTriangle className="h-3.5 w-3.5" />
+                Watch out for
+              </div>
+              <ul className="flex flex-col gap-2">
+                {recommendation.cautions.map((caution) => (
+                  <li
+                    key={caution}
+                    className="rounded-[1rem] border border-[var(--amber-line)] bg-white/55 px-3 py-3 text-[13px] leading-relaxed text-foreground/85"
+                  >
+                    {annotate(caution)}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          <div className="mt-auto flex flex-wrap gap-2">
+            <button
+              onClick={onEditAnswers}
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--line-soft)] bg-white/50 px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-[var(--line-strong)] hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Change answers
+            </button>
+            <button
+              onClick={onRestart}
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--line-soft)] bg-white/50 px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-[var(--line-strong)] hover:text-foreground"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Start over
+            </button>
+          </div>
+        </aside>
       </div>
     </div>
   )
@@ -225,30 +233,26 @@ function PathChip({
     <button
       onClick={onClick}
       className={cn(
-        "group inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[12px] transition-all duration-300",
+        "inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[12px] transition-all duration-300",
         active
           ? primary
-            ? "border-amber-400/60 bg-amber-400/10 text-foreground shadow-[0_0_0_1px_oklch(0.88_0.17_75_/_0.3),_0_0_24px_-6px_oklch(0.88_0.17_75_/_0.5)]"
-            : "border-primary/60 bg-primary/10 text-foreground"
-          : "border-border/60 bg-transparent text-muted-foreground hover:border-border hover:text-foreground",
+            ? "border-[var(--amber-line)] bg-[var(--amber-soft)] text-[var(--amber-ink)]"
+            : "border-[var(--sprout)] bg-[var(--sprout-soft)] text-[var(--sprout-deep)]"
+          : "border-[var(--line-soft)] bg-white/55 text-muted-foreground hover:border-[var(--line-strong)] hover:text-foreground",
       )}
     >
       <span
         className={cn(
-          "h-1.5 w-1.5 rounded-full transition-colors",
+          "h-2 w-2 rounded-full",
           primary
-            ? active
-              ? "bg-amber-400"
-              : "bg-amber-400/60"
-            : active
-              ? "bg-primary"
-              : "bg-primary/60",
+            ? "bg-[var(--amber-branch)]"
+            : "bg-[var(--sprout)]",
         )}
       />
-      <span className="font-medium">{path.name}</span>
+      <span>{path.name}</span>
       {primary && (
-        <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-amber-400/90">
-          top match
+        <span className="text-[10px] uppercase tracking-[0.2em]">
+          lead
         </span>
       )}
     </button>
@@ -265,15 +269,13 @@ function Stat({
   value: string
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-border/60 bg-background/40 px-3 py-2.5">
-      <Icon className="h-4 w-4 text-primary/80" />
-      <div className="flex flex-col leading-tight">
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-          {label}
-        </span>
-        <span className="text-[13px] font-medium capitalize text-foreground">
-          {value}
-        </span>
+    <div className="rounded-[1rem] border border-[var(--line-soft)] bg-[var(--paper)] px-3 py-2.5">
+      <div className="mb-1 flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+        <Icon className="h-3.5 w-3.5 text-[var(--sprout-deep)]" />
+        {label}
+      </div>
+      <div className="text-[13.5px] font-medium capitalize text-foreground">
+        {value}
       </div>
     </div>
   )
@@ -288,38 +290,36 @@ function Block({
   icon: React.ComponentType<{ className?: string }>
   title: string
   items: string[]
-  tone: "positive" | "warning" | "info"
+  tone: "positive" | "warning" | "neutral"
 }) {
   const toneClasses = {
-    positive: "border-primary/25 bg-primary/5 text-primary",
-    warning: "border-amber-500/25 bg-amber-500/5 text-amber-400",
-    info: "border-border/60 bg-background/40 text-muted-foreground",
+    positive: "border-[var(--sprout)] bg-[var(--sprout-soft)]",
+    warning: "border-[var(--amber-line)] bg-[var(--amber-soft)]",
+    neutral: "border-[var(--line-soft)] bg-white/55",
   }[tone]
+
   return (
-    <div className="flex flex-col gap-2 rounded-lg border border-border/60 bg-background/30 p-3">
-      <div
-        className={cn(
-          "flex items-center gap-2 rounded-md border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] w-fit",
-          toneClasses,
-        )}
-      >
-        <Icon className="h-3 w-3" />
+    <div className={cn("rounded-[1.3rem] border px-4 py-4", toneClasses)}>
+      <div className="mb-3 flex items-center gap-2 text-[10.5px] uppercase tracking-[0.2em] text-muted-foreground">
+        <Icon className="h-3.5 w-3.5 text-[var(--sprout-deep)]" />
         {title}
       </div>
-      <ul className="flex flex-col gap-1 text-[13px] leading-relaxed text-foreground/90">
-        {items.map((t, i) => (
-          <li key={i}>{t}</li>
+      <ul className="flex flex-col gap-2">
+        {items.map((item) => (
+          <li key={item} className="text-[13.5px] leading-relaxed text-foreground/82">
+            {annotate(item)}
+          </li>
         ))}
       </ul>
     </div>
   )
 }
 
-function dataSignal(s: string): string {
-  const lower = s.toLowerCase()
-  if (lower.includes("label")) return "labels-driven"
-  if (lower.includes("corpus")) return "corpus-driven"
-  if (lower.includes("tool")) return "interface-driven"
-  if (lower.includes("schema")) return "schema-driven"
-  return "input-driven"
+function dataSignal(value: string): string {
+  const lower = value.toLowerCase()
+  if (lower.includes("label")) return "labels first"
+  if (lower.includes("corpus")) return "corpus shaped"
+  if (lower.includes("tool")) return "system interfaces"
+  if (lower.includes("schema")) return "structured inputs"
+  return "input driven"
 }

@@ -1,10 +1,15 @@
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   images: {
     unoptimized: true,
+  },
+  turbopack: {
+    root: __dirname,
   },
   // Allow the v0 preview iframe host to load HMR + RSC payloads in dev.
   // Without this, client JS fails to hydrate and onClick handlers

@@ -1,48 +1,49 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Palette: 5 colors total
- *   - background   (near-black navy)
- *   - foreground   (near-white)
- *   - muted        (dark gray)
- *   - primary      (electric cyan — "signals")
- *   - accent amber (handled via literal oklch for output glow)
- */
-
 :root {
-  --background: oklch(0.14 0.012 245);
-  --foreground: oklch(0.96 0.005 240);
-  --card: oklch(0.17 0.012 245);
-  --card-foreground: oklch(0.96 0.005 240);
-  --popover: oklch(0.17 0.012 245);
-  --popover-foreground: oklch(0.96 0.005 240);
-  --primary: oklch(0.78 0.15 205);
-  --primary-foreground: oklch(0.12 0.02 240);
-  --secondary: oklch(0.22 0.01 245);
-  --secondary-foreground: oklch(0.96 0.005 240);
-  --muted: oklch(0.2 0.01 245);
-  --muted-foreground: oklch(0.64 0.015 240);
-  --accent: oklch(0.82 0.15 75);
-  --accent-foreground: oklch(0.14 0.012 245);
-  --destructive: oklch(0.65 0.22 22);
-  --destructive-foreground: oklch(0.98 0.005 240);
-  --border: oklch(0.26 0.012 245);
-  --input: oklch(0.22 0.012 245);
-  --ring: oklch(0.78 0.15 205);
-  --chart-1: oklch(0.78 0.15 205);
-  --chart-2: oklch(0.82 0.15 75);
-  --chart-3: oklch(0.62 0.1 220);
-  --chart-4: oklch(0.72 0.12 90);
-  --chart-5: oklch(0.55 0.08 245);
-  --radius: 0.625rem;
+  --background: oklch(0.95 0.02 98);
+  --foreground: oklch(0.29 0.03 142);
+  --card: oklch(0.98 0.012 98 / 0.78);
+  --card-foreground: oklch(0.29 0.03 142);
+  --popover: oklch(0.98 0.012 98);
+  --popover-foreground: oklch(0.29 0.03 142);
+  --primary: oklch(0.59 0.11 167);
+  --primary-foreground: oklch(0.98 0.01 95);
+  --secondary: oklch(0.91 0.02 95);
+  --secondary-foreground: oklch(0.32 0.03 142);
+  --muted: oklch(0.93 0.02 95);
+  --muted-foreground: oklch(0.53 0.03 135);
+  --accent: oklch(0.79 0.1 82);
+  --accent-foreground: oklch(0.28 0.03 142);
+  --destructive: oklch(0.64 0.17 28);
+  --destructive-foreground: oklch(0.98 0.01 95);
+  --border: oklch(0.82 0.03 110);
+  --input: oklch(0.96 0.015 95);
+  --ring: oklch(0.61 0.12 167);
+  --radius: 0rem;
+
+  --paper: oklch(0.985 0.014 96 / 0.88);
+  --panel: oklch(0.975 0.016 95 / 0.78);
+  --panel-strong: oklch(0.99 0.01 95 / 0.9);
+  --line-soft: oklch(0.8 0.03 118 / 0.48);
+  --line-strong: oklch(0.68 0.05 144 / 0.46);
+  --sprout: oklch(0.64 0.1 166);
+  --sprout-soft: oklch(0.93 0.05 154 / 0.88);
+  --sprout-strong: oklch(0.7 0.11 162);
+  --sprout-deep: oklch(0.36 0.05 153);
+  --sprout-ink: oklch(0.2 0.03 152);
+  --amber-soft: oklch(0.95 0.04 82 / 0.88);
+  --amber-line: oklch(0.77 0.08 84 / 0.56);
+  --amber-branch: oklch(0.8 0.1 83);
+  --amber-ink: oklch(0.38 0.05 82);
 }
 
 @theme inline {
-  --font-sans: var(--font-sans, 'Geist', ui-sans-serif, system-ui, sans-serif);
-  --font-mono: var(--font-mono, 'Geist Mono', ui-monospace, monospace);
+  --font-sans: var(--font-sans, "Geist", ui-sans-serif, system-ui, sans-serif);
+  --font-mono: var(--font-mono, "Geist Mono", ui-monospace, monospace);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -62,45 +63,617 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: 0rem;
+  --radius-md: 0rem;
+  --radius-lg: 0rem;
+  --radius-xl: 0rem;
 }
 
 @layer base {
+  /* Strip all border-radius globally */
+  *, *::before, *::after {
+    border-radius: 0 !important;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
+
   html,
   body {
-    @apply bg-background text-foreground;
+    @apply min-h-full bg-background text-foreground;
   }
+
   body {
-    background-image:
-      radial-gradient(
-        ellipse 80% 60% at 50% -10%,
-        oklch(0.78 0.15 205 / 0.08),
-        transparent 60%
-      ),
-      radial-gradient(
-        ellipse 60% 50% at 100% 100%,
-        oklch(0.82 0.15 75 / 0.05),
-        transparent 60%
-      );
+    font-feature-settings: "liga", "kern";
+    background:
+      radial-gradient(circle at 14% 12%, oklch(0.93 0.06 150 / 0.55), transparent 26%),
+      radial-gradient(circle at 88% 18%, oklch(0.94 0.05 80 / 0.55), transparent 22%),
+      radial-gradient(circle at 54% 88%, oklch(0.92 0.04 185 / 0.3), transparent 28%),
+      linear-gradient(180deg, oklch(0.97 0.015 98), oklch(0.94 0.02 100));
     background-attachment: fixed;
+  }
+
+  ::selection {
+    background: oklch(0.82 0.08 165 / 0.32);
   }
 }
 
-/* Ambient starfield-like dots for the network backdrop */
-.bg-grid {
+.wasabi-shell {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+.wasabi-ambient {
+  position: absolute;
+  inset: auto;
+  filter: blur(50px);
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.wasabi-ambient-a {
+  top: -8rem;
+  left: -4rem;
+  width: 24rem;
+  height: 24rem;
+  background: radial-gradient(circle, oklch(0.86 0.08 152 / 0.62), transparent 72%);
+}
+
+.wasabi-ambient-b {
+  right: -4rem;
+  top: 10rem;
+  width: 20rem;
+  height: 20rem;
+  background: radial-gradient(circle, oklch(0.9 0.07 82 / 0.48), transparent 74%);
+}
+
+.wasabi-grain,
+.wasabi-topography {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.wasabi-grain {
+  opacity: 0.08;
   background-image:
-    radial-gradient(oklch(0.35 0.02 245 / 0.35) 1px, transparent 1px);
-  background-size: 22px 22px;
-  background-position: 0 0;
+    radial-gradient(circle at 20% 20%, rgba(0, 0, 0, 0.8) 0.6px, transparent 0.8px),
+    radial-gradient(circle at 70% 30%, rgba(0, 0, 0, 0.45) 0.7px, transparent 0.9px),
+    radial-gradient(circle at 40% 80%, rgba(0, 0, 0, 0.6) 0.5px, transparent 0.8px);
+  background-size: 28px 28px, 34px 34px, 30px 30px;
+}
+
+.wasabi-topography {
+  opacity: 0.42;
+  background-image:
+    radial-gradient(ellipse at center, transparent 58%, rgba(71, 104, 73, 0.08) 58%, transparent 61%),
+    radial-gradient(ellipse at center, transparent 68%, rgba(71, 104, 73, 0.06) 68%, transparent 71%);
+  background-size: 720px 420px, 980px 600px;
+  background-position: center 20%, center 65%;
+}
+
+/* ── Topbar ─────────────────────────────────────────────── */
+
+.wasabi-topbar {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem 1.4rem;
+  border-bottom: 1px solid var(--line-soft);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+}
+
+.wasabi-brand-mark {
+  display: flex;
+  height: 2.5rem;
+  width: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(135deg, oklch(0.95 0.03 96 / 0.95), oklch(0.9 0.04 150 / 0.9));
+  border: 1px solid var(--line-soft);
+  color: var(--sprout-deep);
+  box-shadow: 0 2px 8px rgba(59, 93, 72, 0.18);
+}
+
+.topbar-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: min(100%, 30rem);
+  margin: 0 auto;
+}
+
+.topbar-progress-track {
+  flex: 1;
+  height: 5px;
+  position: relative;
+  overflow: hidden;
+  background: rgba(108, 136, 109, 0.14);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.topbar-progress-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--sprout), var(--amber-branch));
+  transition: width 500ms ease;
+  box-shadow: 0 0 6px rgba(89, 145, 121, 0.4);
+}
+
+.topbar-progress-label {
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--sprout-deep);
+  white-space: nowrap;
+  min-width: 2.8rem;
+  text-align: right;
+}
+
+.status-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid var(--line-soft);
+  background: rgba(255, 255, 255, 0.58);
+  padding: 0.55rem 0.9rem;
+  font-size: 0.8rem;
+  color: var(--sprout-deep);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  transition: border-color 160ms ease, background 160ms ease;
+  backdrop-filter: blur(18px);
+}
+
+.status-reset:hover {
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.80);
+}
+
+/* ── Layout ─────────────────────────────────────────────── */
+
+.wasabi-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1rem;
+  padding: 1rem 1.4rem 1.4rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.wasabi-column,
+.wasabi-landscape {
+  min-width: 0;
+}
+
+/* ── Panels ─────────────────────────────────────────────── */
+
+.wasabi-panel {
+  border: 1px solid var(--line-soft);
+  background: linear-gradient(180deg, var(--panel), rgba(255, 255, 255, 0.58));
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.07),
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.wasabi-panel-strong {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(247, 244, 236, 0.75)),
+    radial-gradient(circle at top left, rgba(219, 242, 229, 0.42), transparent 34%);
+}
+
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sprout-deep);
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  border: 1px solid rgba(69, 125, 102, 0.22);
+  background: linear-gradient(135deg, var(--sprout), var(--sprout-strong));
+  padding: 0.95rem 1.3rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--sprout-ink);
+  box-shadow: 0 4px 16px rgba(70, 122, 96, 0.35), 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.hero-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(70, 122, 96, 0.40), 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.wasabi-note {
+  border: 1px solid var(--line-soft);
+  background: rgba(255, 255, 255, 0.55);
+  padding: 0.95rem 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.wasabi-note-header,
+.overlay-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sprout-deep);
+}
+
+.signal-chip {
+  border: 1px solid var(--line-soft);
+  background: rgba(255, 255, 255, 0.6);
+  padding: 0.42rem 0.8rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--sprout-deep);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(18px);
+}
+
+.signal-chip-muted {
+  color: var(--muted-foreground);
+}
+
+/* ── Option buttons ─────────────────────────────────────── */
+
+.option-bloom {
+  border-color: var(--line-soft);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(244, 241, 233, 0.88));
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.option-bloom-selected {
+  border-color: rgba(96, 148, 122, 0.5);
+  background: linear-gradient(180deg, rgba(232, 247, 238, 0.98), rgba(245, 250, 246, 0.92));
+  box-shadow:
+    0 2px 10px rgba(73, 128, 101, 0.18),
+    0 1px 3px rgba(73, 128, 101, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.option-bloom-sheen {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.8), transparent 35%),
+    linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* ── Landscape / Network ────────────────────────────────── */
+
+.wasabi-landscape {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+.landscape-header {
+  display: flex;
+  align-items: center;
+  padding: 0.2rem 0.35rem;
+  flex-shrink: 0;
+}
+
+.network-shell {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  min-height: clamp(30rem, 58vw, 43.75rem);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(252, 250, 244, 0.68)),
+    radial-gradient(circle at 10% 12%, rgba(123, 175, 145, 0.16), transparent 24%),
+    radial-gradient(circle at 88% 18%, rgba(214, 188, 123, 0.16), transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(244, 239, 228, 0.78));
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.09),
+    0 2px 6px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.network-aura,
+.network-membrane {
+  pointer-events: none;
+  position: absolute;
+}
+
+.network-aura {
+  top: 15%;
+  height: 18rem;
+  width: 18rem;
+  filter: blur(50px);
+  opacity: 0.35;
+}
+
+.network-aura-left {
+  left: -4rem;
+  background: radial-gradient(circle, rgba(89, 145, 121, 0.45), transparent 70%);
+}
+
+.network-aura-right {
+  right: -4rem;
+  background: radial-gradient(circle, rgba(203, 181, 111, 0.38), transparent 70%);
+}
+
+.network-membrane {
+  inset: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  background-image:
+    linear-gradient(rgba(118, 147, 117, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(118, 147, 117, 0.05) 1px, transparent 1px);
+  background-size: 34px 34px;
+}
+
+.network-info-strip {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.signal-group,
+.route-preview,
+.metric-tile {
+  border: 1px solid var(--line-soft);
+  background: rgba(255, 255, 255, 0.72);
+  padding: 0.9rem 1rem;
+  backdrop-filter: blur(18px);
+  min-width: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.route-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 22rem;
+}
+
+.route-preview-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.route-preview-copy {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}
+
+/* ── Signal / answer pills ──────────────────────────────── */
+
+.signal-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid var(--line-soft);
+  background: rgba(255, 255, 255, 0.72);
+  padding: 0.45rem 0.75rem;
+  font-size: 0.76rem;
+  color: var(--sprout-deep);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(18px);
+}
+
+.signal-pill-meter {
+  display: inline-flex;
+  height: 0.35rem;
+  width: 3rem;
+  overflow: hidden;
+  background: rgba(113, 147, 117, 0.12);
+}
+
+.signal-pill-meter span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--sprout), var(--amber-branch));
+}
+
+.answer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid var(--line-soft);
+  background: rgba(255, 255, 255, 0.72);
+  padding: 0.45rem 0.7rem;
+  font-size: 0.77rem;
+  color: var(--muted-foreground);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(18px);
+}
+
+.answer-pill strong {
+  color: var(--foreground);
+  font-weight: 500;
+}
+
+/* ── Glossary terms ─────────────────────────────────────── */
+
+.wasabi-term {
+  border-bottom: 1px dotted rgba(89, 145, 121, 0.45);
+  color: inherit;
+  cursor: help;
+  transition: border-color 120ms ease, color 120ms ease;
+}
+
+.wasabi-term:hover {
+  border-color: var(--sprout);
+  color: var(--sprout-deep);
+}
+
+.wasabi-term:focus-visible {
+  outline: 2px solid rgba(89, 145, 121, 0.35);
+  outline-offset: 3px;
+}
+
+.wasabi-term-card {
+  max-width: 18rem;
+  border: 1px solid var(--line-soft);
+  background: rgba(254, 252, 247, 0.96);
+  padding: 0.8rem 0.9rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10), 0 2px 6px rgba(75, 93, 76, 0.12);
+  color: var(--foreground);
+}
+
+.wasabi-term-title {
+  margin-bottom: 0.25rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sprout-deep);
+}
+
+/* ── Desktop 3-column layout ────────────────────────────── */
+
+@media (min-width: 1100px) {
+  .wasabi-shell {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wasabi-topbar {
+    flex-shrink: 0;
+  }
+
+  .wasabi-layout {
+    flex: 1;
+    min-height: 0;
+    grid-template-columns: minmax(320px, 0.92fr) minmax(540px, 1.6fr) minmax(320px, 0.95fr);
+    align-items: stretch;
+    overflow: hidden;
+  }
+
+  .wasabi-column {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 0.2rem;
+  }
+
+  .wasabi-landscape {
+    height: 100%;
+  }
+
+  .network-shell {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 1099px) {
+  .wasabi-layout {
+    gap: 0.85rem;
+  }
+
+  .network-shell {
+    min-height: 24rem;
+  }
+
+  .signal-group,
+  .route-preview {
+    flex: 1 1 16rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .wasabi-topbar,
+  .wasabi-layout {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .wasabi-topbar {
+    grid-template-columns: auto auto;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .topbar-progress {
+    display: none;
+  }
+
+  .status-reset {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .network-shell {
+    min-height: 21.5rem;
+  }
+
+  .network-membrane {
+    inset: 0.75rem;
+    background-size: 28px 28px;
+  }
+
+  .signal-group,
+  .route-preview,
+  .metric-tile {
+    padding: 0.75rem 0.8rem;
+  }
+
+  .route-preview {
+    max-width: none;
+  }
+
+  .signal-pill {
+    max-width: 100%;
+    gap: 0.45rem;
+    padding: 0.38rem 0.62rem;
+    font-size: 0.69rem;
+  }
+
+  .signal-pill-meter {
+    width: 2.35rem;
+  }
+
+  .route-preview-copy {
+    font-size: 0.74rem;
+  }
+
+  .wasabi-panel h2 {
+    font-size: 1.7rem;
+    line-height: 1.03;
+  }
+
+  .hero-cta {
+    width: 100%;
+    padding: 0.85rem 1.1rem;
+    font-size: 0.88rem;
+  }
+
+  .answer-pill {
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .answer-pill strong {
+    overflow-wrap: anywhere;
+  }
 }
