@@ -89,6 +89,7 @@ export const QUESTIONS: Question[] = [
     subtitle: "Select everything that applies.",
     kind: "multi",
     why: "Constraints usually knock out the obvious-looking answer before you start. Check these first.",
+    exclusiveValues: ["none"],
     options: [
       { value: "privacy", label: "Data can't leave our systems", hint: "On-prem only, no third-party APIs" },
       { value: "interpretability", label: "The decision has to be explainable" },
@@ -105,6 +106,7 @@ export const QUESTIONS: Question[] = [
     subtitle: "Select everything that applies.",
     kind: "multi",
     why: "Whether you need retrieval, tools, or live data determines if a single model call is enough — or if you need something bigger.",
+    exclusiveValues: ["model-only"],
     options: [
       { value: "knowledge", label: "Answers must come from a specific knowledge base" },
       { value: "fresh", label: "Needs live or frequently updated data" },

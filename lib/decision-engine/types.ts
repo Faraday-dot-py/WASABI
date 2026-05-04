@@ -23,6 +23,8 @@ export interface Question {
   options: QuestionOption[]
   // one-line contextual "why this matters"
   why: string
+  // for multi-select: values that clear all other selections when chosen (and vice versa)
+  exclusiveValues?: OptionValue[]
 }
 
 export type Answers = Record<string, OptionValue | OptionValue[] | undefined>

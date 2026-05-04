@@ -19,11 +19,6 @@ interface QuestionCardProps {
   canGoNext: boolean
 }
 
-function exclusiveValuesFor(question: Question) {
-  if (question.id === "constraints") return ["none"]
-  if (question.id === "system") return ["model-only"]
-  return []
-}
 
 function WhyPopover({ question, multi }: { question: Question; multi: boolean }) {
   const [open, setOpen] = useState(false)
@@ -152,7 +147,7 @@ export function QuestionCard({
   const selected = new Set(
     Array.isArray(answer) ? answer : answer ? [answer] : [],
   )
-  const exclusiveValues = exclusiveValuesFor(question)
+  const exclusiveValues = question.exclusiveValues ?? []
   const autoAdvanceTimer = useRef<number | null>(null)
 
   useEffect(() => {

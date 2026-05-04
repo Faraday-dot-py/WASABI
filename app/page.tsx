@@ -18,6 +18,7 @@ import { RecommendationView } from "@/components/recommendation-view"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
@@ -673,6 +674,9 @@ function RecommendationSummary({
             <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em]">
               See full details
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              Full recommendation breakdown including when this approach fits, what to avoid, and next steps.
+            </DialogDescription>
           </DialogHeader>
           <RecommendationView
             recommendation={recommendation}
