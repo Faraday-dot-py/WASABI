@@ -679,3 +679,50 @@
 *, *::before, *::after {
   border-radius: 0 !important;
 }
+
+/* ── Print styles ─────────────────────────────────────────── */
+@media print {
+  .wasabi-topbar,
+  .wasabi-ambient,
+  .wasabi-network,
+  .wasabi-column:not(.print-target),
+  button,
+  nav,
+  [aria-label="Why this signal matters"],
+  .no-print {
+    display: none !important;
+  }
+
+  .wasabi-shell {
+    height: auto !important;
+    min-height: auto !important;
+    background: white !important;
+  }
+
+  .print-target {
+    display: block !important;
+    width: 100% !important;
+    max-width: 680px !important;
+    margin: 0 auto !important;
+    padding: 2rem !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  .wasabi-panel,
+  .wasabi-panel-strong {
+    border: 1px solid #ccc !important;
+    background: white !important;
+    box-shadow: none !important;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.75em;
+    color: #666;
+  }
+
+  @page {
+    margin: 1.5cm;
+  }
+}

@@ -280,7 +280,7 @@ export default function Page() {
           </div>
         </section>
 
-        <aside className="wasabi-column">
+        <aside className={cn("wasabi-column", stage === "done" && "print-target")}>
           {stage === "done" ? (
             <RecommendationSummary
               recommendation={recommendation}
@@ -714,6 +714,13 @@ function RecommendationSummary({
         >
           <ArrowRight className="h-4 w-4" />
           {copied ? "Copied!" : "Share link"}
+        </button>
+        <button
+          onClick={() => window.print()}
+          className="inline-flex items-center gap-2 rounded-full border border-[var(--line-soft)] bg-white/50 px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-[var(--line-strong)] hover:text-foreground"
+        >
+          <Radar className="h-4 w-4" />
+          Print
         </button>
         <button
           onClick={onEditAnswers}
