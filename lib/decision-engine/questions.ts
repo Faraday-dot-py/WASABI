@@ -26,6 +26,8 @@ export const QUESTIONS: Question[] = [
     subtitle: "Be honest. A simpler system is almost always better if it works.",
     kind: "single",
     why: "A lot of real projects don't need ML. If rules, SQL, or a lookup table would do it, that's the right answer — not the boring one.",
+    // If rules are clearly sufficient, skip the ML-specific questions entirely.
+    branches: { "rules-fine": "stage" },
     options: [
       { value: "rules-fine", label: "Rules would probably work fine" },
       { value: "rules-maybe", label: "Rules could work but feel fragile" },

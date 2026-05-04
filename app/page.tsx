@@ -35,6 +35,7 @@ export default function Page() {
   const [stage, setStage] = useState<Stage>("intro")
   const [answers, setAnswers] = useState<Answers>({})
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [indexHistory, setIndexHistory] = useState<number[]>([])
   const [compactNetwork, setCompactNetwork] = useState(false)
 
   useEffect(() => {
@@ -77,19 +78,34 @@ export default function Page() {
   }
 
   function nextStep() {
-    setCurrentIndex((index) => {
-      const next = index + 1
-      if (next >= QUESTIONS.length) {
-        setStage("done")
-        track("recommendation_shown", { primary: recommendation.primary })
-        return QUESTIONS.length - 1
-      }
-      return next
-    })
+    const q = QUESTIONS[currentIndex]
+    const currentAnswer = answers[q.id]
+    const branchTarget =
+      q.branches && typeof currentAnswer === "string"
+        ? q.branches[currentAnswer]
+        : undefined
+    const targetIndex = branchTarget
+      ? QUESTIONS.findIndex((x) => x.id === branchTarget)
+      : currentIndex + 1
+    const next = targetIndex >= 0 ? targetIndex : currentIndex + 1
+    setIndexHistory((h) => [...h, currentIndex])
+    if (next >= QUESTIONS.length) {
+      setStage("done")
+      track("recommendation_shown", { primary: recommendation.primary })
+    } else {
+      setCurrentIndex(next)
+    }
   }
 
   function prevStep() {
-    setCurrentIndex((index) => Math.max(0, index - 1))
+    setIndexHistory((h) => {
+      const prev = h[h.length - 1]
+      if (prev !== undefined) {
+        setCurrentIndex(prev)
+        return h.slice(0, -1)
+      }
+      return h
+    })
   }
 
   function jumpTo(index: number) {
@@ -100,18 +116,21 @@ export default function Page() {
   function beginFlow() {
     setStage("flow")
     setCurrentIndex(0)
+    setIndexHistory([])
     track("flow_started")
   }
 
   function editAnswers() {
     setStage("flow")
     setCurrentIndex(QUESTIONS.length - 1)
+    setIndexHistory([])
     track("answers_edited")
   }
 
   function restart() {
     setAnswers({})
     setCurrentIndex(0)
+    setIndexHistory([])
     setStage("intro")
     track("restarted")
   }
@@ -173,7 +192,7 @@ export default function Page() {
                 onAnswer={(value) => setAnswer(QUESTIONS[currentIndex].id, value)}
                 onNext={nextStep}
                 onBack={prevStep}
-                canGoBack={currentIndex > 0}
+                canGoBack={indexHistory.length > 0}
                 canGoNext={isAnsweredFor(QUESTIONS[currentIndex].id, answers)}
               />
             </div>

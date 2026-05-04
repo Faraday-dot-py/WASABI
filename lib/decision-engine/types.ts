@@ -25,6 +25,8 @@ export interface Question {
   why: string
   // for multi-select: values that clear all other selections when chosen (and vice versa)
   exclusiveValues?: OptionValue[]
+  // answer value → id of the question to jump to (skips default sequential order)
+  branches?: Partial<Record<OptionValue, string>>
 }
 
 export type Answers = Record<string, OptionValue | OptionValue[] | undefined>
