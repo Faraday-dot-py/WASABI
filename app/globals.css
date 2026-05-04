@@ -96,6 +96,7 @@
 
 .wasabi-shell {
   position: relative;
+  min-height: 100vh;
   min-height: 100dvh;
   overflow: hidden;
 }
@@ -547,6 +548,7 @@
 
 @media (min-width: 1100px) {
   .wasabi-shell {
+    height: 100vh;
     height: 100dvh;
     display: flex;
     flex-direction: column;

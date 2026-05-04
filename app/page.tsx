@@ -21,6 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { track } from "@vercel/analytics"
 import { computeNetworkState, computeRecommendation, HIDDEN_1, HIDDEN_2 } from "@/lib/decision-engine/engine"
 import { PATH_BY_ID } from "@/lib/decision-engine/paths"
 import { QUESTIONS } from "@/lib/decision-engine/questions"
@@ -71,6 +72,7 @@ export default function Page() {
 
   function setAnswer(id: string, value: string | string[]) {
     setAnswers((prev) => ({ ...prev, [id]: value }))
+    track("question_answered", { question: id })
   }
 
   function nextStep() {
@@ -78,6 +80,7 @@ export default function Page() {
       const next = index + 1
       if (next >= QUESTIONS.length) {
         setStage("done")
+        track("recommendation_shown", { primary: recommendation.primary })
         return QUESTIONS.length - 1
       }
       return next
@@ -96,6 +99,7 @@ export default function Page() {
   function beginFlow() {
     setStage("flow")
     setCurrentIndex(0)
+    track("flow_started")
   }
 
   function editAnswers() {
@@ -107,6 +111,7 @@ export default function Page() {
     setAnswers({})
     setCurrentIndex(0)
     setStage("intro")
+    track("restarted")
   }
 
   return (
@@ -616,7 +621,7 @@ function RecommendationSummary({
         )}
 
         <button
-          onClick={() => setOpen(true)}
+          onClick={() => { setOpen(true); track("details_opened", { primary: recommendation.primary }) }}
           className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--line-soft)] bg-white/55 px-4 py-2.5 text-[13px] font-medium text-foreground transition-colors hover:border-[var(--line-strong)] hover:bg-white/75"
         >
           <Maximize2 className="h-3.5 w-3.5" />

@@ -44,6 +44,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} bg-background`}
     >
       <body className="font-sans antialiased" suppressHydrationWarning>
+        <noscript>
+          <p style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+            WASABI requires JavaScript. Please enable it in your browser.
+          </p>
+        </noscript>
         {children}
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
