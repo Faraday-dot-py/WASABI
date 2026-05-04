@@ -106,6 +106,7 @@ export default function Page() {
   function editAnswers() {
     setStage("flow")
     setCurrentIndex(QUESTIONS.length - 1)
+    track("answers_edited")
   }
 
   function restart() {
