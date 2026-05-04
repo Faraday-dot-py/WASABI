@@ -27,6 +27,7 @@ import { computeNetworkState, computeRecommendation, HIDDEN_1, HIDDEN_2 } from "
 import { PATH_BY_ID } from "@/lib/decision-engine/paths"
 import { QUESTIONS } from "@/lib/decision-engine/questions"
 import type { Answers, PathId } from "@/lib/decision-engine/types"
+import { decodeAnswers, encodeAnswers } from "@/lib/share"
 import { cn } from "@/lib/utils"
 
 type Stage = "intro" | "flow" | "done"
@@ -36,7 +37,30 @@ export default function Page() {
   const [answers, setAnswers] = useState<Answers>({})
   const [currentIndex, setCurrentIndex] = useState(0)
   const [indexHistory, setIndexHistory] = useState<number[]>([])
+  const [copied, setCopied] = useState(false)
   const [compactNetwork, setCompactNetwork] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const s = params.get("s")
+    if (s) {
+      const decoded = decodeAnswers(s)
+      if (decoded && Object.keys(decoded).length > 0) {
+        setAnswers(decoded)
+        setCurrentIndex(QUESTIONS.length - 1)
+        setStage("done")
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (stage === "done" && Object.keys(answers).length > 0) {
+      const encoded = encodeAnswers(answers)
+      const url = new URL(window.location.href)
+      url.searchParams.set("s", encoded)
+      window.history.replaceState(null, "", url.toString())
+    }
+  }, [stage, answers])
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 767px)")
@@ -132,6 +156,9 @@ export default function Page() {
     setCurrentIndex(0)
     setIndexHistory([])
     setStage("intro")
+    const url = new URL(window.location.href)
+    url.searchParams.delete("s")
+    window.history.replaceState(null, "", url.toString())
     track("restarted")
   }
 
@@ -259,6 +286,14 @@ export default function Page() {
               recommendation={recommendation}
               onEditAnswers={editAnswers}
               onRestart={restart}
+              onShare={() => {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                  setCopied(true)
+                  setTimeout(() => setCopied(false), 2000)
+                })
+                track("link_shared")
+              }}
+              copied={copied}
             />
           ) : compactNetwork ? (
             <CompactInsightPanel
@@ -590,10 +625,14 @@ function RecommendationSummary({
   recommendation,
   onEditAnswers,
   onRestart,
+  onShare,
+  copied,
 }: {
   recommendation: ReturnType<typeof computeRecommendation>
   onEditAnswers: () => void
   onRestart: () => void
+  onShare: () => void
+  copied: boolean
 }) {
   const [open, setOpen] = useState(false)
   const path = PATH_BY_ID[recommendation.primary]
@@ -669,6 +708,13 @@ function RecommendationSummary({
       )}
 
       <div className="mt-auto flex flex-wrap gap-2">
+        <button
+          onClick={onShare}
+          className="inline-flex items-center gap-2 rounded-full border border-[var(--line-soft)] bg-white/50 px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-[var(--line-strong)] hover:text-foreground"
+        >
+          <ArrowRight className="h-4 w-4" />
+          {copied ? "Copied!" : "Share link"}
+        </button>
         <button
           onClick={onEditAnswers}
           className="inline-flex items-center gap-2 rounded-full border border-[var(--line-soft)] bg-white/50 px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-[var(--line-strong)] hover:text-foreground"
