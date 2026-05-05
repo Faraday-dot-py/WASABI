@@ -27,6 +27,7 @@ import { computeNetworkState, computeRecommendation, HIDDEN_1, HIDDEN_2 } from "
 import { PATH_BY_ID } from "@/lib/decision-engine/paths"
 import { QUESTIONS } from "@/lib/decision-engine/questions"
 import type { Answers, PathId } from "@/lib/decision-engine/types"
+import { PRESET_BY_ID } from "@/lib/presets"
 import { decodeAnswers, encodeAnswers } from "@/lib/share"
 import { cn } from "@/lib/utils"
 
@@ -38,17 +39,31 @@ export default function Page() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [indexHistory, setIndexHistory] = useState<number[]>([])
   const [copied, setCopied] = useState(false)
+  const [activePreset, setActivePreset] = useState<string | null>(null)
   const [compactNetwork, setCompactNetwork] = useState(false)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const s = params.get("s")
+    const presetId = params.get("preset")
+
     if (s) {
       const decoded = decodeAnswers(s)
       if (decoded && Object.keys(decoded).length > 0) {
         setAnswers(decoded)
         setCurrentIndex(QUESTIONS.length - 1)
         setStage("done")
+        return
+      }
+    }
+
+    if (presetId) {
+      const preset = PRESET_BY_ID[presetId]
+      if (preset) {
+        setAnswers(preset.answers as Answers)
+        setActivePreset(preset.id)
+        setStage("flow")
+        setCurrentIndex(0)
       }
     }
   }, [])
@@ -155,9 +170,11 @@ export default function Page() {
     setAnswers({})
     setCurrentIndex(0)
     setIndexHistory([])
+    setActivePreset(null)
     setStage("intro")
     const url = new URL(window.location.href)
     url.searchParams.delete("s")
+    url.searchParams.delete("preset")
     window.history.replaceState(null, "", url.toString())
     track("restarted")
   }
@@ -201,6 +218,23 @@ export default function Page() {
           Reset
         </button>
       </header>
+
+      {activePreset && PRESET_BY_ID[activePreset] && (
+        <div className="flex items-center justify-between gap-3 border-b border-[var(--line-soft)] bg-[var(--sprout-soft)] px-5 py-2 text-[12px] text-[var(--sprout-deep)] no-print">
+          <span>
+            <span className="font-medium">{PRESET_BY_ID[activePreset].name}</span>
+            {" — "}
+            {PRESET_BY_ID[activePreset].description}
+            {" "}Some answers are pre-filled — change any you disagree with.
+          </span>
+          <button
+            onClick={() => setActivePreset(null)}
+            className="shrink-0 text-[11px] underline opacity-70 hover:opacity-100"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       <div className="wasabi-layout">
         <aside className="wasabi-column">
