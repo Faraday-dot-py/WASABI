@@ -50,7 +50,7 @@ export default function Page() {
     if (s) {
       const decoded = decodeAnswers(s)
       if (decoded && Object.keys(decoded).length > 0) {
-        setAnswers(decoded)
+        setAnswers(decoded) // eslint-disable-line react-hooks/set-state-in-effect
         setCurrentIndex(QUESTIONS.length - 1)
         setStage("done")
         return
@@ -596,7 +596,7 @@ function JourneyAtlas({
           <div className="h-px flex-1 bg-[linear-gradient(90deg,var(--line-strong),transparent)]" />
         </div>
         <h2 className="text-[30px] font-semibold tracking-[-0.04em] text-foreground">
-          Here's what you told WASABI.
+          Here&apos;s what you told WASABI.
         </h2>
         <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">
           These answers produced your recommendation. Go back in to change

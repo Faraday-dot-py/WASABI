@@ -47,7 +47,7 @@ export function RecommendationView({
             Recommendation ready
           </div>
           <h2 className="text-balance text-[30px] font-semibold leading-[1.02] tracking-[-0.045em] text-foreground">
-            Here's what WASABI recommends.
+            Here&apos;s what WASABI recommends.
           </h2>
           <p className="max-w-xl text-pretty text-[14.5px] leading-relaxed text-muted-foreground">
             Based on your answers. The alternatives below are real options —

@@ -28,10 +28,10 @@ function WhyPopover({ question, multi }: { question: Question; multi: boolean })
   const triggerRef = useRef<HTMLButtonElement>(null)
   const timer = useRef<number | null>(null)
 
-  useEffect(() => { setMounted(true) }, [])
+  useEffect(() => { setMounted(true) }, []) // eslint-disable-line react-hooks/set-state-in-effect
 
   useEffect(() => {
-    setOpen(false)
+    setOpen(false) // eslint-disable-line react-hooks/set-state-in-effect
     setPinned(false)
     if (timer.current) clearTimeout(timer.current)
   }, [question.id])
